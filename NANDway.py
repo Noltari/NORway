@@ -151,9 +151,14 @@ class NANDFlasher(TeensySerial):
 		self.NAND_RAS = (ord(nand_info[9]) << 8) | ord(nand_info[10])
 		self.NAND_BUS_WIDTH = ord(nand_info[11])
 		self.NAND_BLOCK_SZ = (ord(nand_info[12]) << 24) | (ord(nand_info[13]) << 16) | (ord(nand_info[14]) << 8) | ord(nand_info[15])
-		self.NAND_NBLOCKS = (ord(nand_info[16]) << 24) | (ord(nand_info[17]) << 16) | (ord(nand_info[18]) << 8) | ord(nand_info[19])
 		self.NAND_NPLANES = ord(nand_info[20])
-		self.NAND_PLANE_SZ = (ord(nand_info[21]) << 24) | (ord(nand_info[22]) << 16) | (ord(nand_info[23]) << 8) | ord(nand_info[24])
+
+		if (self.MF_ID == 0x01):
+			self.NAND_NBLOCKS = (ord(nand_info[16]) << 28) | (ord(nand_info[17]) << 20) | (ord(nand_info[18]) << 12) | (ord(nand_info[19]) << 4)
+			self.NAND_PLANE_SZ = (ord(nand_info[21]) << 28) | (ord(nand_info[22]) << 20) | (ord(nand_info[23]) << 12) | (ord(nand_info[24]) << 4)
+		else:
+			self.NAND_NBLOCKS = (ord(nand_info[16]) << 24) | (ord(nand_info[17]) << 16) | (ord(nand_info[18]) << 8) | ord(nand_info[19])
+			self.NAND_PLANE_SZ = (ord(nand_info[21]) << 24) | (ord(nand_info[22]) << 16) | (ord(nand_info[23]) << 8) | ord(nand_info[24])
 
 		if (self.NAND_PAGE_SZ <= 0):
 			print
@@ -186,7 +191,13 @@ class NANDFlasher(TeensySerial):
 		self.readid()
 
 		print
-		if self.MF_ID == 0xEC:
+		if self.MF_ID == 0x01:
+			print "NAND chip manufacturer: Spansion (0x%02x)"%self.MF_ID
+			if self.DEVICE_ID == 0xF1:
+				print "NAND chip type:         S34ML01G1 (0x%02x)"%self.DEVICE_ID
+			else:
+				print "NAND chip type:         unknown (0x%02x)"%self.DEVICE_ID
+		elif self.MF_ID == 0xEC:
 			print "NAND chip manufacturer: Samsung (0x%02x)"%self.MF_ID
 			if self.DEVICE_ID == 0xA1:
 				print "NAND chip type:         K9F1G08R0A (0x%02x)"%self.DEVICE_ID
