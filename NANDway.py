@@ -197,6 +197,12 @@ class NANDFlasher(TeensySerial):
 				print "NAND chip type:         S34ML01G1 (0x%02x)"%self.DEVICE_ID
 			else:
 				print "NAND chip type:         unknown (0x%02x)"%self.DEVICE_ID
+		elif self.MF_ID == 0xC8:
+			print "NAND chip manufacturer: ESMT (0x%02x)"%self.MF_ID
+			if self.DEVICE_ID == 0xDA:
+				print "NAND chip type:         F59L2G81A (0x%02x)"%self.DEVICE_ID
+			else:
+				print "NAND chip type:         unknown (0x%02x)"%self.DEVICE_ID
 		elif self.MF_ID == 0xEC:
 			print "NAND chip manufacturer: Samsung (0x%02x)"%self.MF_ID
 			if self.DEVICE_ID == 0xA1:
