@@ -153,7 +153,7 @@ class NANDFlasher(TeensySerial):
 		self.NAND_BLOCK_SZ = (ord(nand_info[12]) << 24) | (ord(nand_info[13]) << 16) | (ord(nand_info[14]) << 8) | ord(nand_info[15])
 		self.NAND_NPLANES = ord(nand_info[20])
 
-		if (self.MF_ID == 0x01):
+		if (self.MF_ID == 0x01) or (self.MF_ID == 0xC2):
 			self.NAND_NBLOCKS = (ord(nand_info[16]) << 28) | (ord(nand_info[17]) << 20) | (ord(nand_info[18]) << 12) | (ord(nand_info[19]) << 4)
 			self.NAND_PLANE_SZ = (ord(nand_info[21]) << 28) | (ord(nand_info[22]) << 20) | (ord(nand_info[23]) << 12) | (ord(nand_info[24]) << 4)
 		else:
@@ -195,6 +195,12 @@ class NANDFlasher(TeensySerial):
 			print "NAND chip manufacturer: Spansion (0x%02x)"%self.MF_ID
 			if self.DEVICE_ID == 0xF1:
 				print "NAND chip type:         S34ML01G1 (0x%02x)"%self.DEVICE_ID
+			else:
+				print "NAND chip type:         unknown (0x%02x)"%self.DEVICE_ID
+		elif self.MF_ID == 0xC2:
+			print "NAND chip manufacturer: Macronix (0x%02x)"%self.MF_ID
+			if self.DEVICE_ID == 0xF1:
+				print "NAND chip type:         MX30LF1G18AC (0x%02x)"%self.DEVICE_ID
 			else:
 				print "NAND chip type:         unknown (0x%02x)"%self.DEVICE_ID
 		elif self.MF_ID == 0xC8:
